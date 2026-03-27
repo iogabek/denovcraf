@@ -26,10 +26,33 @@ const TelegramIcon = () => (
 );
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
+  const hasPendingCall =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).has("call");
+  const [loading, setLoading] = useState(!hasPendingCall);
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.5]);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const callPhone = url.searchParams.get("call");
+
+    if (!callPhone) {
+      return;
+    }
+
+    url.searchParams.delete("call");
+    url.hash = "";
+    window.history.replaceState({}, document.title, url.toString());
+    setLoading(false);
+
+    const timeoutId = window.setTimeout(() => {
+      window.location.href = `tel:${callPhone}`;
+    }, 150);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   useEffect(() => {
     // Prevent scrolling while loading
@@ -104,13 +127,14 @@ export default function App() {
                 <ContactCard
                   icon={<Phone className="w-6 h-6" />}
                   title="Phone"
-                  value="+998 90 123 45 67"
+                  value="+998 (97) 351 35 35"
                   delay={0.2}
                 />
                 <ContactCard
                   icon={<MapPin className="w-6 h-6" />}
                   title="Address"
-                  value="Denov, Surxondaryo, Uzbekistan"
+                  value="Denov tumani cola bekati"
+                  href="https://maps.app.goo.gl/x9c4dyW6as6KXQXv5"
                   delay={0.4}
                 />
               </div>
@@ -125,9 +149,9 @@ export default function App() {
                   Connect With Us
                 </motion.h3>
                 <div className="flex flex-col gap-4">
-                  <SocialButton icon={<Instagram className="w-6 h-6" />} label="Instagram" href="#" delay={0.6} />
-                  <SocialButton icon={<TelegramIcon />} label="Telegram" href="#" delay={0.7} />
-                  <SocialButton icon={<Youtube className="w-6 h-6" />} label="YouTube" href="#" delay={0.8} />
+                  <SocialButton icon={<Instagram className="w-6 h-6" />} label="denov_craf" href="https://instagram.com/denov_craf" delay={0.6} />
+                  <SocialButton icon={<TelegramIcon />} label="denov_craf" href="https://t.me/denov_craf" delay={0.7} />
+                  <SocialButton icon={<Youtube className="w-6 h-6" />} label="Coming soon" href="#" delay={0.8} />
                 </div>
               </div>
             </div>
@@ -169,10 +193,10 @@ export default function App() {
           <span className="text-gray-900 font-semibold">Isoqov Og'abek</span>
           <span className="hidden sm:inline text-gray-300">|</span>
           <a 
-            href="tel:+998886998878" 
+            href="tel:+998973513535" 
             className="text-[#e60023] hover:text-[#ff3355] transition-colors font-semibold"
           >
-            +998 88 699 88 78
+            +998 (97) 351 35 35
           </a>
         </div>
       </motion.footer>

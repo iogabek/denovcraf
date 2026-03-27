@@ -5,22 +5,16 @@ interface ContactCardProps {
   icon: ReactNode;
   title: string;
   value: string;
+  href?: string;
   delay?: number;
 }
 
-export function ContactCard({ icon, title, value, delay = 0 }: ContactCardProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -5, scale: 1.02 }}
-      className="group relative overflow-hidden rounded-2xl glass-card p-4 sm:p-6 flex items-start gap-3 sm:gap-4 cursor-pointer"
-    >
+export function ContactCard({ icon, title, value, href, delay = 0 }: ContactCardProps) {
+  const content = (
+    <>
       {/* Red Accent Glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#e60023]/0 via-[#e60023]/0 to-[#e60023]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
+
       {/* Red Accent Line */}
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#e60023] scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-500 ease-out" />
 
@@ -36,6 +30,37 @@ export function ContactCard({ icon, title, value, delay = 0 }: ContactCardProps)
           {value}
         </span>
       </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <motion.a
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+        whileHover={{ y: -5, scale: 1.02 }}
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className="group relative overflow-hidden rounded-2xl glass-card p-4 sm:p-6 flex items-start gap-3 sm:gap-4 cursor-pointer"
+      >
+        {content}
+      </motion.a>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -5, scale: 1.02 }}
+      className="group relative overflow-hidden rounded-2xl glass-card p-4 sm:p-6 flex items-start gap-3 sm:gap-4"
+    >
+      {content}
     </motion.div>
   );
 }
